@@ -69,7 +69,7 @@ class LogShipper:
         if not self.buffer:
             return
 
-        print(f"--- Flushing {len(self.buffer)} logs ---")
+        print(f"Flushing {len(self.buffer)} logs...")
         logs = ""
         for log in self.buffer:
             logs = logs + '\n' + log

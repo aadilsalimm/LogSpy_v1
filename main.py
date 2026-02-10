@@ -1,12 +1,13 @@
 import multiprocessing as mp
 from log_shipper import LogShipper
-from llm_call_1 import classify
+from log_classifierV1 import LogClassifier
 
 def main():
     logs_from_shipper = mp.Queue()
     logs_to_classifier = mp.Queue()
     result_from_classifier = mp.Queue()
     shipper = LogShipper()
+    classifier = LogClassifier()
 
     shipper_process = mp.Process(
         target=shipper.start,
@@ -14,7 +15,7 @@ def main():
     )
 
     classifier_process = mp.Process(
-        target=classify,
+        target=classifier.classify,
         args=(logs_to_classifier,
               result_from_classifier,)
     )
