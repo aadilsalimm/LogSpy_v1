@@ -9,11 +9,10 @@ class LogShipper:
         self.buffer = []
         self.process = None
 
-    def start(self):
+    def start(self, log_queue):
         """Starts the journalctl subprocess."""
+        self.log_queue = log_queue
         try:
-            # -f: follow
-            # -o json: output as json
             self.process = subprocess.Popen(
                 ['journalctl', '-f', '-o', 'json', '-n', '0'],
                 stdout=subprocess.PIPE,
@@ -71,14 +70,11 @@ class LogShipper:
             return
 
         print(f"--- Flushing {len(self.buffer)} logs ---")
+        logs = ""
         for log in self.buffer:
-            # We can parse json here if we want to pretty print or filter,
-            # but for now we just dump the raw line as requested/implied.
-            # Use json.loads(log) if we need to process the object.
-            print(log) 
-        print("----------------------------")
-        
+            logs = logs + '\n' + log
         self.buffer.clear()
+        self.log_queue.put(logs)
 
 if __name__ == "__main__":
     # Default buffer size is 10, can be changed here or via args if expanded
