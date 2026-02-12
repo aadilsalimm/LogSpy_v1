@@ -22,7 +22,7 @@ class LogClassifier:
         chat_completion = self.groq.chat.completions.create(
             messages=[{"role": "user", "content": prompt}],
             model="llama-3.3-70b-versatile",
-            temperature=0.5
+            temperature=0.1
         )
 
         content = chat_completion.choices[0].message.content
