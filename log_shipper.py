@@ -2,7 +2,7 @@ import subprocess
 import json
 import sys
 import select
-from log_filter import preprocess_logs
+from log_filter import preprocess_logs, should_filter
 
 class LogShipper:
     def __init__(self, buffer_size=10):
@@ -59,10 +59,17 @@ class LogShipper:
         """Adds a log entry to the buffer and checks if flush is needed."""
         if not log_entry:
             return
+        
+        # Skip unwanted log messages
+        if should_filter(log_entry):
+            return
+        
         # Filter unwanted fields from the log message
         filtered_log = preprocess_logs(log_entry)
         self.buffer.append(str(filtered_log))
         
+        print(f"Logs captured: {len(self.buffer)}") # For Debug
+
         if len(self.buffer) >= self.buffer_size:
             self.flush_buffer()
 
