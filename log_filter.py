@@ -58,6 +58,7 @@ def should_filter(input_log, drop_info_level=True):
         r"Starting .*\.service",          # systemd routine start
         r"Started .*\.service",
         r"Deactivated successfully",
+        r"Lockdown: systemd-logind: hibernation is restricted;",
     ]
 
     COMPILED_PATTERNS = [re.compile(p) for p in MESSAGE_PATTERNS]
