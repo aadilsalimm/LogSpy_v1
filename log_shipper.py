@@ -5,10 +5,11 @@ import select
 from log_filter import preprocess_logs, should_filter
 
 class LogShipper:
-    def __init__(self, buffer_size=10):
+    def __init__(self, buffer_size=10, filter_logs=True):
         self.buffer_size = buffer_size
         self.buffer = []
         self.process = None
+        self.filter_logs = filter_logs
 
     def start(self, log_queue):
         """Starts the journalctl subprocess."""
@@ -61,7 +62,7 @@ class LogShipper:
             return
         
         # Skip unwanted log messages
-        if should_filter(log_entry):
+        if self.filter_logs and should_filter(log_entry):
             return
         
         # Filter unwanted fields from the log message
