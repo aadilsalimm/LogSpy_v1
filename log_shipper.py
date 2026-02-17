@@ -51,9 +51,9 @@ class LogShipper:
             self.process.terminate()
         except Exception as e:
             print(f"Error in capture loop: {e}")
-        finally:
-            if self.process:
-                self.process.kill()
+        # finally:
+        #     if self.process:
+        #         self.process.kill()
 
     def add_to_buffer(self, log_entry):
         """Adds a log entry to the buffer and checks if flush is needed."""
