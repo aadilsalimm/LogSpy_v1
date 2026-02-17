@@ -1,0 +1,91 @@
+{
+    "instruction": "Analyze the following system logs and classify whether they indicate malicious activity.",
+    "input": [
+        {'systemd_unit': 'user@1000.service', 'syslog_identifier': None, 'priority': 5, 'message': 'Connecting to org.freedesktop.Tracker3.Miner.Files'},
+        {'systemd_unit': 'user@1000.service', 'syslog_identifier': None, 'priority': 4, 'message': 'Failed to create file chooser proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gnome: Timeout was reached'},
+        {'systemd_unit': 'user@1000.service', 'syslog_identifier': None, 'priority': 4, 'message': 'No skeleton to export'},
+        {'systemd_unit': 'user@1000.service', 'syslog_identifier': None, 'priority': 5, 'message': 'Launching DING process'},
+        {'systemd_unit': 'user@1000.service', 'syslog_identifier': 'systemd', 'priority': 4, 'message': 'xdg-desktop-portal.service: start operation timed out. Terminating.'}
+    ],
+    "output": {
+        "label": "Normal",
+        "component": "systemd/user@1000.service",
+        "reason": "Timeout errors and service start failures are common system issues, no clear indication of malicious activity."
+    }
+}
+{
+    "instruction": "Analyze the following system logs and classify whether they indicate malicious activity.",
+    "input": [
+        {'systemd_unit': 'user@1000.service', 'syslog_identifier': 'systemd', 'priority': 4, 'message': "xdg-desktop-portal.service: Failed with result 'timeout'."},
+        {'systemd_unit': 'user@1000.service', 'syslog_identifier': 'systemd', 'priority': 3, 'message': 'Failed to start xdg-desktop-portal.service - Portal service.'},
+        {'systemd_unit': 'user@1000.service', 'syslog_identifier': 'dbus-daemon', 'priority': 5, 'message': "[session uid=1000 pid=2140] Failed to activate service 'org.freedesktop.portal.Desktop': timed out (service_start_timeout=120000ms)"},
+        {'systemd_unit': 'user@1000.service', 'syslog_identifier': 'dbus-daemon', 'priority': 5, 'message': "[session uid=1000 pid=2140] Failed to activate service 'org.freedesktop.impl.portal.desktop.gnome': timed out (service_start_timeout=120000ms)"},
+        {'systemd_unit': 'wpa_supplicant.service', 'syslog_identifier': 'wpa_supplicant', 'priority': 5, 'message': 'wlp4s0: Reject scan trigger since one is already pending'}
+    ],
+    "output": {
+        "label": "Normal",
+        "component": "System Services",
+        "reason": "Timeouts and failed service starts are reported, but they appear to be related to normal system operations and do not indicate malicious activity."
+    }
+}
+{
+    "instruction": "Analyze the following system logs and classify whether they indicate malicious activity.",
+    "input": [
+        {'systemd_unit': 'user@1000.service', 'syslog_identifier': 'sudo', 'priority': 5, 'message': '   aadil : TTY=pts/3 ; PWD=/home/aadil ; USER=root ; COMMAND=/usr/bin/su -'},
+        {'systemd_unit': 'user@1000.service', 'syslog_identifier': 'su', 'priority': 5, 'message': '(to root) root on pts/4'},
+        {'systemd_unit': 'user@1000.service', 'syslog_identifier': 'sudo', 'priority': 5, 'message': '   aadil : TTY=pts/3 ; PWD=/home/aadil ; USER=root ; COMMAND=/usr/bin/su -'},
+        {'systemd_unit': 'user@1000.service', 'syslog_identifier': 'su', 'priority': 5, 'message': '(to root) root on pts/4'},
+        {'systemd_unit': 'user@1000.service', 'syslog_identifier': None, 'priority': 5, 'message': 'Connecting to org.freedesktop.Tracker3.Miner.Files'}
+    ],
+    "output": {
+        "label": "Normal",
+        "component": "Authentication/Authorization",
+        "reason": "Repeated su and sudo commands may indicate normal user activity, and Tracker3.Miner.Files connection is a standard system service."
+    }
+}
+{
+    "instruction": "Analyze the following system logs and classify whether they indicate malicious activity.",
+    "input": [
+        {"systemd_unit": "user@1000.service", "syslog_identifier": "gnome-keyring-daemon", "priority": 4, "message": "asked to register item /org/freedesktop/secrets/collection/login/1, but it's already registered"},
+        {"systemd_unit": "user@1000.service", "syslog_identifier": None, "priority": 4, "message": "asked to register item /org/freedesktop/secrets/collection/login/1, but it's already registered"},
+        {"systemd_unit": "user@1000.service", "syslog_identifier": "sudo", "priority": 5, "message": "   aadil : TTY=pts/3 ; PWD=/home/aadil ; USER=root ; COMMAND=/usr/bin/ping -f localhost"},
+        {"systemd_unit": "user@1000.service", "syslog_identifier": "sudo", "priority": 5, "message": "   aadil : TTY=pts/3 ; PWD=/home/aadil ; USER=root ; COMMAND=/usr/bin/ping -f localhost"},
+        {"systemd_unit": "user@1000.service", "syslog_identifier": "sudo", "priority": 5, "message": "   aadil : TTY=pts/3 ; PWD=/home/aadil ; USER=root ; COMMAND=/usr/bin/ping -f localhost"}
+    ],
+    "output": {
+        "label": "Anomalous",
+        "component": "sudo",
+        "reason": "Repeated execution of ping command with flood option"
+    }
+}
+{
+    "instruction": "Analyze the following system logs and classify whether they indicate malicious activity.",
+    "input": [
+        {"systemd_unit": "user@1000.service", "syslog_identifier": null, "priority": 4, "message": "g_str_has_suffix: assertion 'str != NULL' failed"},
+        {"systemd_unit": "user@1000.service", "syslog_identifier": null, "priority": 4, "message": "g_str_has_suffix: assertion 'str != NULL' failed"},
+        {"systemd_unit": "user@1000.service", "syslog_identifier": null, "priority": 4, "message": "g_str_has_suffix: assertion 'str != NULL' failed"},
+        {"systemd_unit": "user@1000.service", "syslog_identifier": null, "priority": 4, "message": "g_str_has_suffix: assertion 'str != NULL' failed"},
+        {"systemd_unit": "user@1000.service", "syslog_identifier": null, "priority": 5, "message": "Unable to mount volume Redmi Note 10S: Gio.IOErrorEnum: Error initializing camera: -53: Could not claim the USB device"}
+    ],
+    "output": {
+        "label": "Anomalous",
+        "component": "Systemd/User Service",
+        "reason": "Recurring assertion failures and USB device claim errors"
+    }
+}
+{
+    "instruction": "Analyze the following system logs and classify whether they indicate malicious activity.",
+    "input" : [
+        {'systemd_unit': 'user@1000.service', 'syslog_identifier': None, 'priority': 4, 'message': "g_str_has_suffix: assertion 'str != NULL' failed"},
+        {'systemd_unit': 'user@1000.service', 'syslog_identifier': None, 'priority': 4, 'message': "g_str_has_suffix: assertion 'str != NULL' failed"},
+        {'systemd_unit': 'user@1000.service', 'syslog_identifier': None, 'priority': 4, 'message': "g_str_has_suffix: assertion 'str != NULL' failed"},
+        {'systemd_unit': None, 'syslog_identifier': 'kernel', 'priority': 4, 'message': 'workqueue: pm_runtime_work hogged CPU for >10000us 4 times, consider switching to WQ_UNBOUND'},
+        {'systemd_unit': 'user@1000.service', 'syslog_identifier': None, 'priority': 4, 'message': "g_str_has_suffix: assertion 'str != NULL' failed"}
+    ],
+    "output": {
+        "label": "Anomalous", 
+        "component": "Systemd/User Service", 
+        "reason": "Repeated assertion failures and CPU hogging by a workqueue"
+    }
+}
+

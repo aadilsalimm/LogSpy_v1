@@ -6,7 +6,7 @@ def main():
     logs_from_shipper = mp.Queue()
     logs_to_classifier = mp.Queue()
     result_from_classifier = mp.Queue()
-    shipper = LogShipper()
+    shipper = LogShipper(buffer_size=5, filter_logs=False)
     classifier = LogClassifier()
 
     shipper_process = mp.Process(

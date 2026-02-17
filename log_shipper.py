@@ -1,13 +1,13 @@
 import subprocess
-import json
 import sys
-import select
+from log_filter import preprocess_logs, should_filter
 
 class LogShipper:
-    def __init__(self, buffer_size=10):
+    def __init__(self, buffer_size=10, filter_logs=True):
         self.buffer_size = buffer_size
         self.buffer = []
         self.process = None
+        self.filter_logs = filter_logs
 
     def start(self, log_queue):
         """Starts the journalctl subprocess."""
@@ -50,14 +50,22 @@ class LogShipper:
             self.process.terminate()
         except Exception as e:
             print(f"Error in capture loop: {e}")
-        finally:
-            if self.process:
-                self.process.kill()
+        # finally:
+        #     if self.process:
+        #         self.process.kill()
 
     def add_to_buffer(self, log_entry):
         """Adds a log entry to the buffer and checks if flush is needed."""
         if not log_entry:
             return
+
+        # Skip unwanted log messages
+        if self.filter_logs and should_filter(log_entry):
+            return
+        
+        # Filter unwanted fields from the log message
+        filtered_log = preprocess_logs(log_entry)
+        self.buffer.append(str(filtered_log))
 
         self.buffer.append(log_entry)
         
