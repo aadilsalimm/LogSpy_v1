@@ -16,9 +16,9 @@ class LogClassifier:
             Organize the classification results as in the alpaca format given below: 
             The purpose is dataset creation for fine-tuning an llm to classify log messages.
             Give classification for the given sequence of logs as a whole; not for each individual logs.
-            {{"instruction": "Analyze the following system logs and classify whether they indicate malicious activity.", "input" : <log sequence -> add all logs in the sequence>, "output": {{"is_anomalous": <0/1>, "component": <component name>, "reason": <concise description of reason in one or two lines>}}}}
+            {{"instruction": "Analyze the following system logs and classify whether they indicate malicious activity.", "input" : <log sequence -> add all logs in the sequence>, "output": {{"is_anomalous": <0/1>, "component": <component name>,"timestamp":<timestamp>,"reason": <concise description of reason in one or two lines>}}}}
             Log messages: {log_msgs}
-            PROVIDE THE OUTPUT STRICTLY IN THE ABOVE FORMAT WITHOUT ANY OTHER EXPLANATIONS, INTRODUCTIONS, CONCLUSIONS, OR FOLLOW-UP QUESTIONS.
+            PROVIDE THE OUTPUT STRICTLY IN THE ABOVE JSON FORMAT WITHOUT ANY OTHER EXPLANATIONS, INTRODUCTIONS, CONCLUSIONS, OR FOLLOW-UP QUESTIONS.
             '''
 
             chat_completion = self.groq.chat.completions.create(

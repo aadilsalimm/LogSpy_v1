@@ -10,7 +10,7 @@ def preprocess_logs(input_log):
             "syslog_identifier": log_entry.get("SYSLOG_IDENTIFIER"),
             "priority": int(log_entry["PRIORITY"]) if "PRIORITY" in log_entry else None,
             "message": log_entry.get("MESSAGE"),
-            # "timestamp": int(log_entry["__REALTIME_TIMESTAMP"]) if "__REALTIME_TIMESTAMP" in log_entry else None,
+            "timestamp": int(log_entry["__REALTIME_TIMESTAMP"]) if "__REALTIME_TIMESTAMP" in log_entry else None,
             # "pid": int(log_entry["_PID"]) if "_PID" in log_entry else None,
             # "hostname": log_entry.get("_HOSTNAME"),
         }

@@ -36,8 +36,8 @@ class LogShipper:
         if not self.process:
             return
 
-        try:
-            while True:
+        while True:
+            try:
                 # Read a line from stdout
                 line = self.process.stdout.readline()
                 if not line:
@@ -46,15 +46,17 @@ class LogShipper:
                 
                 self.add_to_buffer(line.strip())
                 
-        except KeyboardInterrupt:
-            print("\nStopping log shipper...")
-            self.flush_buffer() # Flush remaining logs before exit
-            self.process.terminate()
-        except Exception as e:
-            print(f"Error in capture loop: {e}")
-        # finally:
-        #     if self.process:
-        #         self.process.kill()
+            except KeyboardInterrupt:
+                print("\nStopping log shipper...")
+                self.flush_buffer() # Flush remaining logs before exit
+                self.process.terminate()
+                break
+            except Exception as e:
+                print(f"Error in capture loop: {e}")
+                continue
+            # finally:
+            #     if self.process:
+            #         self.process.kill()
 
     def add_to_buffer(self, log_entry):
         """Adds a log entry to the buffer and checks if flush is needed."""
